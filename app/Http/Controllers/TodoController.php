@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Todo;
 
 class TodoController extends Controller
 {
+    private $todo;
+
+    public function __construct(Todo $instanceClass)
+    {
+        $this->todo = $instanceClass;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,8 @@ class TodoController extends Controller
     public function index()
     {
         //return "Hello world!!";
-        return view('todo.index');
+        $todos = $this->todo->all();
+        return view('todo.index', compact('todos'));
     }
 
     /**
@@ -24,7 +32,7 @@ class TodoController extends Controller
      */
     public function create()
     {
-        //
+        return view('todo.create');
     }
 
     /**
@@ -35,7 +43,9 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+        $this->todo->fill($input)->save();
+        return redirect()->to('todo');
     }
 
     /**
@@ -57,7 +67,8 @@ class TodoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $todo = $this->todo->find($id);
+        return view('todo.edit', compact('todo'));
     }
 
     /**
@@ -69,7 +80,9 @@ class TodoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+        $this->todo->find($id)->fill($input)->save();
+        return redirect()->to('todo');
     }
 
     /**
@@ -80,6 +93,7 @@ class TodoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->todo->find($id)->delete();
+        return redirect()->to('todo');
     }
 }
