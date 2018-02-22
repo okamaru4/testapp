@@ -4,6 +4,8 @@ namespace Tests;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Console\Kernel;
+use Artisan;
+use App\Todo;
 
 trait CreatesApplication
 {
@@ -21,5 +23,13 @@ trait CreatesApplication
         Hash::driver('bcrypt')->setRounds(4);
 
         return $app;
+    }
+
+    public function prepareForTests()
+    {
+        Artisan::call('migrate');
+        if(!Todo::all()->count()){
+            Artisan::call('db:seed');
+        }
     }
 }
