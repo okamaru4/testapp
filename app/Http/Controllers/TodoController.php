@@ -12,6 +12,7 @@ class TodoController extends Controller
     public function __construct(Todo $instanceClass)
     {
         $this->todo = $instanceClass;
+        $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
